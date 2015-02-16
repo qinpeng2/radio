@@ -1,0 +1,49 @@
+{
+    "result": {
+        "code": 200,
+        "message": "SUCCESS"
+    },
+    "data": {
+        "paginator": {
+            "page": 1,
+            "perPage": 3,
+            "total": 6,
+            "totalPage": 2
+        },
+        "list": [
+            {
+                "id": "fda78288-dd05-460b-a54d-363c20b9c9f4",
+                "fileName": "测试文件名称1",
+                "description": "测试文件描述1",
+                "channel": "100",
+                "originalName": "测试视频1",
+                "size": "1016",
+                "suffix": ".flv",
+                "path": "videos/fda78288-dd05-460b-a54d-363c20b9c9f4.flv",
+                "dateStamp": "2015-01-30 13:13:24"
+            },
+            {
+                "id": "512b9f7e-6545-4501-95b3-867f2d4355ec",
+                "fileName": "测试文件名称2",
+                "description": "测试文件描述2",
+                "channel": "100",
+                "originalName": "测试视频2",
+                "size": "1016",
+                "suffix": ".flv",
+                "path": "videos/512b9f7e-6545-4501-95b3-867f2d4355ec.flv",
+                "dateStamp": "2015-01-30 13:14:04"
+            },
+            {
+                "id": "8edd5db7-62b1-4337-b734-615c7043d779",
+                "fileName": "测试文件名称3",
+                "description": "测试文件描述3",
+                "channel": "100",
+                "originalName": "测试视频3",
+                "size": "1016",
+                "suffix": ".flv",
+                "path": "videos/8edd5db7-62b1-4337-b734-615c7043d779.flv",
+                "dateStamp": "2015-01-30 13:14:17"
+            }
+        ]
+    }
+}

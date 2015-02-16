@@ -1,0 +1,171 @@
+package com.sl.tune.service.impl;
+
+import java.io.File;
+import java.util.Date;
+import java.util.UUID;
+
+import javax.servlet.ServletContext;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.sl.tune.entity.Channel;
+import com.sl.tune.entity.Clip;
+import com.sl.tune.entity.PageList;
+import com.sl.tune.repository.ChannelRepository;
+import com.sl.tune.repository.ClipRepository;
+import com.sl.tune.request.ClipRequest;
+import com.sl.tune.request.ClipSearchRequest;
+import com.sl.tune.service.ClipService;
+import com.sl.tune.utility.Result;
+import com.sl.tune.utility.TuneException;
+import com.sl.tune.utility.TuneProperties;
+
+@Component("clipService")
+public class ClipServiceImpl implements ClipService {
+
+	@Autowired
+	private ClipRepository clipRepository;
+	
+	private ChannelRepository channelRepository;
+	
+	private TuneProperties tuneProperties;
+	
+	public void validate(Clip clip) throws TuneException {
+		
+		String channel = clip.getChannel();
+		
+		if (channel == null || channel.isEmpty()) {
+			throw new TuneException(Result.createParamResult(Result.DENY_EMPTY, "Clip Channel"));
+		}
+		
+		Channel c = channelRepository.find(channel);
+		if (c == null || c.getId().isEmpty()) {
+			throw new TuneException(Result.createParamResult(Result.FK_FORCE, "Clip", "Channel"));
+		}
+		
+	}
+
+	/**
+	 * Upload a New Clip
+	 */
+	@Override
+	public Clip upload(ServletContext servletContext, MultipartFile file, ClipRequest clipRequest) throws TuneException {
+
+		if (file == null || file.isEmpty()) {
+			return null;
+		}
+
+		String orgFileName = file.getOriginalFilename();
+
+		int indexOfDot = orgFileName.lastIndexOf(".");
+		String orgName = orgFileName.substring(0, indexOfDot);
+		String suffix = orgFileName.substring(indexOfDot, orgFileName.length());
+
+		String id = UUID.randomUUID().toString();
+
+		Clip clip = new Clip();
+		clip.setId(id);
+		clip.setFileName(clipRequest.getFileName());
+		clip.setDescription(clipRequest.getDescription());
+		clip.setChannel(clipRequest.getChannel());
+		clip.setOriginalName(orgName);
+		clip.setSuffix(suffix);
+		clip.setSize(Long.toString(file.getSize()));
+		clip.setDateStamp(new Date());
+		
+		validate(clip);
+
+		String clipPath = "/" + id + suffix;
+		String realPath = tuneProperties.getUploadPath() + clipPath;
+
+		if (!realPath.isEmpty()) {
+			try {
+				file.transferTo(new File(realPath));
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new TuneException(Result.FILE_TRANSFER_ERROR);
+			}
+			clip.setPath(clipPath);
+		}
+
+		clipRepository.insert(clip);
+
+		return clip;
+	}
+
+	/**
+	 * Delete One Clip
+	 */
+	@Override
+	public Clip deleteClip(String id, String password) throws TuneException {
+
+		if (!password.equals(tuneProperties.getPassword())) {
+			throw new TuneException(Result.UNAUTHORIZED);
+		}
+
+		Clip removedClip = clipRepository.removeOne(id);
+
+		if (removedClip == null) {
+			throw new TuneException(Result.NON_EXISTENT);
+		}
+
+		return removedClip;
+	}
+
+	/**
+	 * Find One Clip
+	 */
+	@Override
+	public Clip find(String id) throws TuneException {
+
+		Clip clip = clipRepository.find(id);
+
+		if (clip == null) {
+			throw new TuneException(Result.NON_EXISTENT);
+		}
+
+		return clip;
+	}
+
+	/**
+	 * Find by Search Criteria Currently, only page criteria
+	 */
+	@Override
+	public PageList<Clip> find(ClipSearchRequest clipSearchRequest) throws TuneException {
+
+		PageList<Clip> list = clipRepository.find(clipSearchRequest);
+
+		if (list == null || list.getList() == null || list.getList().isEmpty()) {
+			throw new TuneException(Result.NON_EXISTENT);
+		}
+
+		return list;
+	}
+
+	public ClipRepository getClipRepository() {
+		return clipRepository;
+	}
+
+	public void setClipRepository(ClipRepository clipRepository) {
+		this.clipRepository = clipRepository;
+	}
+	
+	public ChannelRepository getChannelRepository() {
+		return channelRepository;
+	}
+
+	public void setChannelRepository(ChannelRepository channelRepository) {
+		this.channelRepository = channelRepository;
+	}
+
+	public TuneProperties getTuneProperties() {
+		return tuneProperties;
+	}
+
+	public void setTuneProperties(TuneProperties tuneProperties) {
+		this.tuneProperties = tuneProperties;
+	}
+
+}

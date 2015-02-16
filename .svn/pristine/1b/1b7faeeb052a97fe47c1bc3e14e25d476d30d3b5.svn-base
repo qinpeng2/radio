@@ -1,0 +1,16 @@
+host.name=com.ls
+
+template.path=/opt/radio/templates/
+project.root=/opt/radio
+logging.root=/opt/radio/logs
+sys.logging.level=error
+logging.level=error
+
+#byte 500M limited 
+file.maxsize=524288000
+file.path=/opt/vods
+
+mongo.host=localhost
+mongo.port=27017
+mongo.dbname=tune
+

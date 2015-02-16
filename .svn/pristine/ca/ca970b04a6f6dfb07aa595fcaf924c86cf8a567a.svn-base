@@ -1,0 +1,17 @@
+host.name=com.ls
+
+template.path=/workspace/zkjc/radio/trunk/templates/
+project.root=/workspace/zkjc/radio/trunk
+logging.root=/workspace/zkjc/radio/trunk/logs
+sys.logging.level=error
+logging.level=error
+
+#byte 500M limited 
+file.maxsize=524288000
+file.path=/workspace/zkjc/radio/trunk/templates
+auth.password=123456
+
+mongo.host=localhost
+mongo.port=27017
+mongo.dbname=tune
+

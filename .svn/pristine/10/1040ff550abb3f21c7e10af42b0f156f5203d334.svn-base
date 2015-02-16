@@ -1,0 +1,14 @@
+template.path=E:/trunk2/templates/
+project.root=E:/trunk2/
+logging.root=E:/trunk2/logs
+sys.logging.level=error
+logging.level=error
+
+#byte 500M limited 
+file.maxsize=524288000
+file.path=E:/usr/radio
+
+mongo.host=localhost
+mongo.port=27017
+mongo.dbname=tune
+

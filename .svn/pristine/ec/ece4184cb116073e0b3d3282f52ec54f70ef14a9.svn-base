@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:lang="http://www.springframework.org/schema/lang" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-2.5.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
+	http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.5.xsd"
+	default-autowire="byName">
+	
+	<import resource="tune-context.xml" />
+	
+	<mongo:db-factory host="${mongo.host}" port="${mongo.port}" dbname="${mongo.dbname}"/>
+	
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+	    <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
+    </bean>
+    
+    <bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize">
+			<value>${file.maxsize}</value>
+			<!-- 1M=1048576 -->
+		</property>
+	</bean>
+	
+	<bean id="handlerMapping" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+	    <property name="interceptors">
+			<list>
+				<bean class="com.sl.tune.controller.interceptor.AccessKeyInterceptor"></bean>
+			</list>
+		</property>
+    </bean>
+	
+	<bean id="requestMappingHandlerAdapter" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+	    <property name="messageConverters">
+	        <list>
+	            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+	                <property name="supportedMediaTypes">
+	                    <list>
+	                        <value>text/html; charset=UTF-8</value>
+	                        <value>application/json;charset=UTF-8</value>
+	                    </list>
+                    </property>
+                </bean>
+	        </list>
+	    </property>
+    </bean>
+    
+	<bean id="tuneProperties" class="com.sl.tune.utility.TuneProperties">
+	    <property name="uploadPath">
+	        <value>${file.path}</value>
+	    </property>
+	    <property name="password">
+	        <value>${auth.password}</value>
+	    </property>
+	</bean>
+</beans>

@@ -1,0 +1,17 @@
+{
+    "result": {
+        "code": 200,
+        "message": "SUCCESS"
+    },
+    "data": {
+        "id": "1addfb22-2c4e-4934-9e06-0349adf3b78f",
+        "fileName": "测试文件名7",
+        "description": "测试文件描述7",
+        "channel": "100",
+        "originalName": "测试视频6",
+        "size": "1016",
+        "suffix": ".flv",
+        "path": "videos/1addfb22-2c4e-4934-9e06-0349adf3b78f.flv",
+        "dateStamp": "2015-01-30 13:35:31"
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "result": {
+        "code": 200,
+        "message": "SUCCESS"
+    },
+    "data": {
+        "id": "fda78288-dd05-460b-a54d-363c20b9c9f4",
+        "fileName": "测试文件名称1",
+        "description": "测试文件描述1",
+        "channel": "100",
+        "originalName": "测试视频1",
+        "size": "1016",
+        "suffix": ".flv",
+        "path": "videos/fda78288-dd05-460b-a54d-363c20b9c9f4.flv",
+        "dateStamp": "2015-01-30 13:13:24"
+    }
+}

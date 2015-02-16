@@ -1,0 +1,80 @@
+package com.sl.tune.repository.impl;
+
+import java.util.List;
+
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Component;
+
+import com.sl.tune.entity.Clip;
+import com.sl.tune.entity.PageList;
+import com.sl.tune.entity.Paginator;
+import com.sl.tune.repository.ClipRepository;
+import com.sl.tune.request.ClipSearchRequest;
+
+@Component("clipRepository")
+public class ClipRepositoryImpl implements ClipRepository {
+	
+	private MongoTemplate mongoTemplate;
+
+	@Override
+	public void insert(Clip clip) {
+		mongoTemplate.insert(clip);
+	}
+
+	@Override
+	public Clip find(String id) {
+		return mongoTemplate.findById(id, Clip.class);
+		// return mongoTemplate.findOne(new Query(Criteria.where("id").is(id)), Clip.class);
+	}
+
+	@Override
+	public Clip removeOne(String id) {
+		Clip clip = find(id);
+		
+		mongoTemplate.remove(clip); 
+		
+		return clip;
+	}
+
+	@Override
+	public List<Clip> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public PageList<Clip> find(ClipSearchRequest clipSearchRequest) {
+		
+		Criteria criteria = Criteria.where("channel").is(clipSearchRequest.getChannel());
+
+		Query q = new Query(criteria);
+		
+		long total = mongoTemplate.count(q, Clip.class);
+		int totalPage = (total % clipSearchRequest.getPerPage() == 0) ? (int) (total / clipSearchRequest.getPerPage()) 
+				: (int) total / clipSearchRequest.getPerPage()+ 1;
+		int skip = (clipSearchRequest.getPage() - 1) * clipSearchRequest.getPerPage();
+
+		q.skip(skip);
+		q.limit(clipSearchRequest.getPerPage());
+		
+		List<Clip> list = mongoTemplate.find(q, Clip.class);
+		
+		Paginator paginator = new Paginator(clipSearchRequest.getPage(), clipSearchRequest.getPerPage(), 
+				total, totalPage);
+		
+		PageList<Clip> clips = new PageList<Clip>(list, paginator);
+		
+		return clips;
+	}
+
+	public MongoTemplate getMongoTemplate() {
+		return mongoTemplate;
+	}
+
+	public void setMongoTemplate(MongoTemplate mongoTemplate) {
+		this.mongoTemplate = mongoTemplate;
+	}
+	
+}

@@ -1,0 +1,20 @@
+package com.sl.tune.controller.clip;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller
+public class ChannelController {
+	
+	@RequestMapping(value = "/channels", method = RequestMethod.GET)
+	@ResponseBody
+	public String list() {
+		return null;
+		
+//		PageList<Clip> clips = clipService.find(new ClipSearchRequest(page, perPage));
+//		
+//		return new JsonResult(clips).toString();
+	}
+}
