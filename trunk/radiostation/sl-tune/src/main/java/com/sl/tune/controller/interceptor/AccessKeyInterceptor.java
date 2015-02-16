@@ -5,6 +5,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+/**
+ * A servlet filter for processing the HTTP response header
+ * 	The main purpose for this is going to handle the cross domain HTTP request
+ * 
+ * @author qinpeng
+ *
+ */
 public class AccessKeyInterceptor extends HandlerInterceptorAdapter {
 	
 	@Override
